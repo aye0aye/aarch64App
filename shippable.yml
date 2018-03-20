@@ -20,7 +20,7 @@ branches:
 # full list http://docs.shippable.com/ci/advancedOptions/environmentVariables/
 env:
   global:
-    - DOCKER_REPO=dh_aarch64App_img
+    - DOCKER_REPO=dh_aarch64_app
     - DOCKER_ACC=aye0aye # {account name}
 build:
   pre_ci_boot:
@@ -54,11 +54,11 @@ integrations:
 #---------------------------------------------------------------#
 resources:
 # Docker Image
-  - name: dh_aarch64App_img
+  - name: dh_aarch64_app
     type: image
     integration: demo_dh # replace with your integration name
     versionTemplate:
-      sourceName: "aye0aye/dh_aarch64App_img" # replace with your Hub URL
+      sourceName: "aye0aye/dh_aarch64_app" # replace with your Hub URL
       isPull: false
       versionName: latest
 
@@ -73,6 +73,6 @@ jobs:
     dependencyMode: strict
     triggerMode: parallel
     steps:
-      - OUT: dh_aarch64App_img
+      - OUT: dh_aarch64_app_img
     flags:
       - Arm
