@@ -49,6 +49,15 @@ integrations:
     - integrationName: demo_dh
       type: docker
 
+  notifications:
+    - integrationName: email
+      type: email
+      recipients:
+        - avi@shippable.com
+      sendConsoleLogs: true
+      sendCoverageReports: true
+      on_pull_request: never
+
 #---------------------------------------------------------------#
 #------------------ Pipeline Resources -------------------------#
 #---------------------------------------------------------------#
