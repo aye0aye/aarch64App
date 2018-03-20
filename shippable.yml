@@ -1,0 +1,50 @@
+################################################
+################ CI Config #####################
+################################################
+
+# Language setting http://docs.shippable.com/ci/nodejs-continuous-integration/
+language: node_js
+node_js:
+  - 8.4.0
+
+runtime:
+  nodePool: demo_aarch64
+
+# use this to control what branches get built.
+# http://docs.shippable.com/ci/advancedOptions/branches/
+branches:
+  only:
+    - master
+
+# using pre-defined build variables
+# full list http://docs.shippable.com/ci/advancedOptions/environmentVariables/
+env:
+  global:
+    - DOCKER_REPO=dh_aarch64App_img
+    - DOCKER_ACC=aye0aye # {account name}
+build:
+  pre_ci_boot:
+    image_name: drydock/aarch64_u16nodall
+    image_tag: v6.2.4
+
+  # http://docs.shippable.com/ci/shippableyml/#ci
+  ci:
+    - node --version
+    - npm install
+    - export XUNIT_FILE=shippable/testresults/result.xml
+    - npm test
+    - mkdir -p shippable/testresults
+    - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
+  # http://docs.shippable.com/ci/shippableyml/#post_ci
+  post_ci:
+    - export IMG_NAME=$DOCKER_ACC/$DOCKER_REPO:$BRANCH.$BUILD_NUMBER
+    - docker build -t $IMG_NAME .
+    - docker push $IMG_NAME
+#  on_success:
+#    # save the new image state for use later in the pipeline
+#    - shipctl put_resource_state $DOCKER_REPO versionName $BRANCH.$BUILD_NUMBER
+
+integrations:
+  hub:
+    - integrationName: demo_dh
+      type: docker
