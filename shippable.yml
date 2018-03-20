@@ -73,6 +73,6 @@ jobs:
     dependencyMode: strict
     triggerMode: parallel
     steps:
-      - OUT: dh_aarch64_app_img
+      - OUT: dh_aarch64_app
     flags:
       - Arm
