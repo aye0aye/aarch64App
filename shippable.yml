@@ -40,11 +40,39 @@ build:
     - export IMG_NAME=$DOCKER_ACC/$DOCKER_REPO:$BRANCH.$BUILD_NUMBER
     - docker build -t $IMG_NAME .
     - docker push $IMG_NAME
-#  on_success:
-#    # save the new image state for use later in the pipeline
-#    - shipctl put_resource_state $DOCKER_REPO versionName $BRANCH.$BUILD_NUMBER
+  on_success:
+    # save the new image state for use later in the pipeline
+    - shipctl put_resource_state $DOCKER_REPO versionName $BRANCH.$BUILD_NUMBER
 
 integrations:
   hub:
     - integrationName: demo_dh
       type: docker
+
+#---------------------------------------------------------------#
+#------------------ Pipeline Resources -------------------------#
+#---------------------------------------------------------------#
+resources:
+# Docker Image
+  - name: dh_aarch64App_img
+    type: image
+    integration: demo_dh # replace with your integration name
+    versionTemplate:
+      sourceName: "aye0aye/dh_aarch64App_img" # replace with your Hub URL
+      isPull: false
+      versionName: latest
+
+#---------------------------------------------------------------#
+#--------------------   Pipeline Jobs   ------------------------#
+#---------------------------------------------------------------#
+jobs:
+
+# runCI job that builds and pushes artifact using Shippable CI
+  - name: aarch64App_runCI
+    type: runCI
+    dependencyMode: strict
+    triggerMode: parallel
+    steps:
+      - OUT: dh_aarch64App_img
+    flags:
+      - Arm
