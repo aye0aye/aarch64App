@@ -76,7 +76,7 @@ resources:
     versionTemplate:
       params:
         RUNMODE: "test"
-        REGION: "seattle"
+        REGION: "Hong Kong"
         TITLE: "welcome to demo blog"
         ENDPOINT: "147.75.67.14"
         USERNAME: "root"

@@ -8,6 +8,6 @@ describe('check add route', function() {
 
     var sum = router.add(x, y);
 
-    expect(sum).to.be.equal(3);
+    expect(sum).to.be.equal(2);
 	});
 });
