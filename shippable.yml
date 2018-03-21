@@ -121,7 +121,6 @@ jobs:
             - ssh-add -L
             - export APP_IMG=$(shipctl get_resource_version_key dh_aarch64_app sourceName)
             - export APP_TAG=$(shipctl get_resource_version_name dh_aarch64_app)
-#            - ssh $USERNAME@$ENDPOINT "sudo docker rm -f $APP_NAME || true"
-#            - ssh $USERNAME@$ENDPOINT "sudo docker run -d -p 3000:3000 --env RELEASE=$RUNMODE --env RUN_MODE=$RUNMODE --env REGION=$REGION --env APP_TITLE=$TITLE --name=$APP_NAME $APP_IMG:$APP_TAG"
+            - ssh $USERNAME@$ENDPOINT "sudo docker rm -f $APP_NAME || true"
+            - ssh $USERNAME@$ENDPOINT "sudo docker run -d -p 3000:3000 --env RELEASE=$RUNMODE --env RUN_MODE=$RUNMODE --env REGION=$REGION --env APP_TITLE=$TITLE --name=$APP_NAME $APP_IMG:$APP_TAG"
             - popd
-            
