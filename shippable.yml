@@ -71,6 +71,21 @@ resources:
       isPull: false
       versionName: latest
 
+  - name: app_params
+    type: params
+    versionTemplate:
+      params:
+        RUNMODE: "test"
+        REGION: "seattle"
+        TITLE: "welcome to demo blog"
+        ENDPOINT: "47.75.67.14"
+        USERNAME: root
+
+  ## PEM key integration to be used to ssh into deployment host
+  - name: deploy_key
+    type: integration
+    integration: aarch_demo
+
 #---------------------------------------------------------------#
 #--------------------   Pipeline Jobs   ------------------------#
 #---------------------------------------------------------------#
@@ -85,3 +100,28 @@ jobs:
       - OUT: dh_aarch64_app
     flags:
       - Arm
+
+  - name: aarch64App_deploy
+    type: runSh
+    runtime:
+      nodePool: demo_aarch64
+    steps:
+      - IN: deploy_key
+      - IN: dh_aarch64_app
+      - IN: app_params
+        switch: off
+      - TASK:
+          name: deploying_app
+          script:
+            - pushd $(shipctl get_resource_meta deploy_key)
+            - export APP_NAME="blog"
+            - cat integration.json | jq -r '.key' > key.pem
+            - chmod 600 key.pem
+            - ssh-add key.pem
+            - ssh-add -L
+            - export APP_IMG=$(shipctl get_resource_version_key dh_aarch64_app sourceName)
+            - export APP_TAG=$(shipctl get_resource_version_name dh_aarch64_app)
+#            - ssh $USERNAME@$ENDPOINT "sudo docker rm -f $APP_NAME || true"
+#            - ssh $USERNAME@$ENDPOINT "sudo docker run -d -p 3000:3000 --env RELEASE=$RUNMODE --env RUN_MODE=$RUNMODE --env REGION=$REGION --env APP_TITLE=$TITLE --name=$APP_NAME $APP_IMG:$APP_TAG"
+            - popd
+            
