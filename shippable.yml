@@ -78,8 +78,8 @@ resources:
         RUNMODE: "test"
         REGION: "seattle"
         TITLE: "welcome to demo blog"
-        ENDPOINT: "47.75.67.14"
-        USERNAME: root
+        ENDPOINT: "147.75.67.14"
+        USERNAME: "root"
 
   ## PEM key integration to be used to ssh into deployment host
   - name: deploy_key
